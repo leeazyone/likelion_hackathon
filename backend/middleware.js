@@ -1,5 +1,5 @@
-require('dotenv').config()
 const jwt = requrie('jsonwebtoken')
+require('dotenv').config()
 const secret = process.env.JWT_SECRET
 
 function isAdmin(req, res, next) {

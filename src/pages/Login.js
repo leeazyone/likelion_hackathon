@@ -28,6 +28,7 @@ const Login = () => {
       const data = await response.json()
       if (response.ok) {
         localStorage.setItem('userId', data.iduser) // 로그인 상태 저장
+        localStorage.setItem('token', res.data.token) //JWT 토큰 저장
         alert('로그인 성공!')
         navigate('/')
       } else {
@@ -39,44 +40,44 @@ const Login = () => {
   }
 
   return (
-    <div className="login-container">
-      <div className="login-box">
-        <h1 className="title">hackathon</h1>
-        <h2 className="subtitle">로그인</h2>
+    <div className='login-container'>
+      <div className='login-box'>
+        <h1 className='title'>hackathon</h1>
+        <h2 className='subtitle'>로그인</h2>
 
-        <div className="form-group">
+        <div className='form-group'>
           <label>아이디</label>
           <input
-            type="text"
-            placeholder="아이디"
+            type='text'
+            placeholder='아이디'
             value={userId}
             onChange={(e) => setUserId(e.target.value)}
           />
         </div>
 
-        <div className="form-group">
+        <div className='form-group'>
           <label>비밀번호</label>
           <input
-            type="password"
-            placeholder="비밀번호"
+            type='password'
+            placeholder='비밀번호'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
 
-        <div className="button-group">
-          <button className="login-btn" onClick={handleLogin}>
+        <div className='button-group'>
+          <button className='login-btn' onClick={handleLogin}>
             로그인
           </button>
         </div>
 
         <hr />
 
-        <div className="footer">
+        <div className='footer'>
           <span>아직 회원이 아니라면?</span>
-          <Link to="/signup">회원가입</Link>
+          <Link to='/signup'>회원가입</Link>
           <br />
-          <Link to="/find">아이디/비밀번호 찾기</Link>
+          <Link to='/find'>아이디/비밀번호 찾기</Link>
         </div>
       </div>
     </div>

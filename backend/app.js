@@ -143,26 +143,46 @@ app.post('/api/signup', async (req, res) => {
 app.post('/api/login', (req, res) => {
   console.log('login 진입')
   const { iduser, userpw } = req.body
+
   if (!iduser || !userpw) {
     return res.status(400).json({ error: 'ID와 비밀번호를 입력하시오.' })
   }
+
   const query = 'SELECT * FROM users WHERE iduser = ?'
   pool.query(query, [iduser], async (err, results) => {
     if (err) {
       return res.status(500).json({ error: 'DB 오류: ' + err.message })
     }
+
     if (results.length === 0) {
       return res.status(401).json({ error: '존재하지 않는 ID입니다.' })
     }
+
     const user = results[0]
-    // 비밀번호 비교
     const match = await bcrypt.compare(userpw, user.userpw)
+
     if (!match) {
       return res.status(401).json({ error: '비밀번호가 틀렸습니다.' })
     }
-    // 세션에 사용자 정보 저장
-    req.session.user = { iduser: user.iduser, id: user.id }
-    res.status(200).json({ message: '로그인 성공', iduser: user.iduser })
+
+    // JWT 토큰 발급
+    const jwt = require('jsonwebtoken')
+    const token = jwt.sign(
+      {
+        id: user.id,
+        iduser: user.iduser,
+        role: user.role, //이 필드는 DB에 있어야 함.
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    )
+
+    // 응답에 토큰 포함해서 보내기
+    res.status(200).json({
+      message: '로그인 성공',
+      token,
+      iduser: user.iduser,
+    })
   })
 })
 
