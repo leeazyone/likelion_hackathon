@@ -1,0 +1,139 @@
+.find-account-container {
+  min-height: 100vh;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Pretendard", sans-serif;
+}
+
+.find-account-box {
+  width: 30%;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 6px 30px #ebf1f9;
+  padding: 48px 38px 36px 38px;
+  border: 2px solid black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.find-account-box h1 {
+  font-size: 2.1rem;
+  font-weight: 900;
+  color: black;
+  margin-bottom: 30px;
+  letter-spacing: -1px;
+}
+
+.find-box {
+  width: 100%;
+  margin-bottom: 36px;
+}
+
+.find-box h3 {
+  color: #232025;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.find-box input {
+  width: 95%;
+  padding: 13px 12px;
+  border: 1.5px solid #232025;
+  border-radius: 8px;
+  font-size: 1.07rem;
+  background: #ebf1f9;
+  margin-bottom: 12px;
+  transition: border 0.14s, box-shadow 0.13s;
+}
+.find-box input:focus {
+  border: 1.5px solid #5391d9;
+  outline: none;
+  background: #fff;
+}
+.send-code-btn {
+  width: 100%;
+  background: #5391d9;
+  color: #fff;
+  font-weight: 900;
+  font-size: 1.08rem;
+  border: none;
+  border-radius: 8px;
+  padding: 13px 0;
+  margin-top: 5px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  box-shadow: 0 2px 8px #ebf1f9;
+}
+.send-code-btn:hover {
+  background: #6b96db;
+  color: black;
+}
+.reset-password-btn {
+  width: 100%;
+  background: #5391d9;
+  color: #fff;
+  font-weight: 900;
+  font-size: 1.08rem;
+  border: none;
+  border-radius: 8px;
+  padding: 13px 0;
+  margin-top: 5px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  box-shadow: 0 2px 8px #ebf1f9;
+}
+.reset-password-btn:hover {
+  background: #6b96db;
+  color: black;
+}
+.find-box button {
+  width: 100%;
+  background: #5391d9;
+  color: #fff;
+  font-weight: 900;
+  font-size: 1.08rem;
+  border: none;
+  border-radius: 8px;
+  padding: 13px 0;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  box-shadow: 0 2px 8px #ebf1f9;
+}
+.find-box button:hover {
+  background: #6b96db;
+  color: black;
+}
+
+.find-box p {
+  margin-top: 12px;
+  background: #f4f4f4;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #232025;
+  text-align: center;
+  border: 1px solid #ccc;
+}
+
+.find-account-container a {
+  color: #5391d9;
+  font-weight: bold;
+  text-decoration: underline;
+  transition: color 0.14s;
+  font-size: 0.95rem;
+  margin-top: 8px;
+}
+.find-account-container a:hover {
+  color: #18141b;
+}
+
+@media (max-width: 480px) {
+  .find-account-box {
+    padding: 26px 8vw 18px 8vw;
+    min-width: unset;
+  }
+}
