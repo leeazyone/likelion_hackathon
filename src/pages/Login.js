@@ -28,7 +28,7 @@ const Login = () => {
       const data = await response.json()
       if (response.ok) {
         localStorage.setItem('userId', data.iduser) // 로그인 상태 저장
-        localStorage.setItem('token', res.data.token) //JWT 토큰 저장
+        localStorage.setItem('token', data.token) //JWT 토큰 저장
         alert('로그인 성공!')
         navigate('/')
       } else {
