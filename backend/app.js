@@ -155,6 +155,7 @@ app.post('/api/login', (req, res) => {
     }
 
     if (results.length === 0) {
+      await logAction(null, `로그인 실패: 존재하지 않는 ID (${iduser})`, req.ip)
       return res.status(401).json({ error: '존재하지 않는 ID입니다.' })
     }
 
@@ -162,6 +163,7 @@ app.post('/api/login', (req, res) => {
     const match = await bcrypt.compare(userpw, user.userpw)
 
     if (!match) {
+      await logAction(user.id, '로그인 실패: 비밀번호 불일치', req.ip)
       return res.status(401).json({ error: '비밀번호가 틀렸습니다.' })
     }
 
@@ -177,6 +179,7 @@ app.post('/api/login', (req, res) => {
       message: '로그인 성공',
       iduser: user.iduser,
     })
+    await logAction(user.id, '로그인 성공', req.ip)
   })
 })
 
@@ -186,7 +189,7 @@ app.post('/api/logout', (req, res) => {
   if (!req.session.user) {
     return res.status(400).json({ error: '로그인 상태가 아닙니다.' })
   }
-
+  await logAction(req.session.user.id, '로그아웃', req.ip);
   req.session.destroy((err) => {
     if (err) {
       console.error('세션 제거 실패:', err)
