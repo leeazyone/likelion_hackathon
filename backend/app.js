@@ -290,21 +290,16 @@ app.post('/api/reset-password', async (req, res) => {
   }
 })
 
-console.log('🔥 /admin/logs 라우트 등록 시도됨') // 서버 시작될 때 무조건 찍혀야 함
 // 관리자 전용 로그 조회 API
 app.get('/admin/logs', isAdmin, async (req, res) => {
   console.log('[ROUTE] /admin/logs 접근됨')
-  const [rows] = await pool
+  const result = await pool
     .promise()
     .query('SELECT * FROM logs ORDER BY timestamp DESC')
   console.log('[ROUTE] 로그 개수:', rows.length)
   await logAction(req.session.user.id, '관리자 로그 조회', req.ip)
+  const rows = result[0]
   res.json(rows)
-})
-
-app.get('/test123', (req, res) => {
-  console.log('🧪 /test123 진입')
-  res.json({ test: true })
 })
 
 // 정적 파일 제공 (React 빌드 파일)
