@@ -292,9 +292,11 @@ app.post('/api/reset-password', async (req, res) => {
 
 // 관리자 전용 로그 조회 API
 app.get('/admin/logs', isAdmin, async (req, res) => {
+  console.log('[ROUTE] /admin/logs 접근됨')
   const [rows] = await pool
     .promise()
     .query('SELECT * FROM logs ORDER BY timestamp DESC')
+  console.log('[ROUTE] 로그 개수:', rows.length)
   await logAction(req.session.user.id, '관리자 로그 조회', req.ip)
   res.json(rows)
 })
