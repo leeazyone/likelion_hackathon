@@ -151,6 +151,7 @@ app.post('/api/login', (req, res) => {
   const query = 'SELECT * FROM users WHERE iduser = ?'
   pool.query(query, [iduser], async (err, results) => {
     if (err) {
+      await logAction(null, `로그인 실패(DB 오류): ${iduser}`, req.ip)
       return res.status(500).json({ error: 'DB 오류: ' + err.message })
     }
 
@@ -163,7 +164,11 @@ app.post('/api/login', (req, res) => {
     const match = await bcrypt.compare(userpw, user.userpw)
 
     if (!match) {
-      await logAction(user?.id || null, '로그인 실패: 비밀번호 불일치', req.ip)
+      await logAction(
+        user.id,
+        `로그인 실패: 비밀번호 불일치 (${iduser})`,
+        req.ip
+      )
       return res.status(401).json({ error: '비밀번호가 틀렸습니다.' })
     }
 
@@ -174,6 +179,7 @@ app.post('/api/login', (req, res) => {
       role: user.role,
     }
     await logAction(user.id, '로그인 성공', req.ip)
+
     // 프론트엔드에 간단한 로그인 정보만 응답
     res.status(200).json({
       message: '로그인 성공',
