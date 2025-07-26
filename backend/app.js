@@ -182,6 +182,7 @@ app.post('/api/login', (req, res) => {
 
 // [로그아웃] 처리 라우트
 app.post('/api/logout', (req, res) => {
+  console.log('logout 진입')
   if (!req.session.user) {
     return res.status(400).json({ error: '로그인 상태가 아닙니다.' })
   }
