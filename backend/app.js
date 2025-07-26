@@ -10,7 +10,7 @@ const pool = require('./mysql') // MySQL 연결
 const transporter = require('./mailer') // nodemailer 설정
 const path = require('path')
 
-const { isAdmin } = require('./middleware')
+const { isAdmin, isLoggedIn } = require('./middleware')
 const logAction = require('./logger')
 
 // (공통) 도메인과 기능에 api가 붙는 이유: cannot GET 오류를 해결하기 위해 백엔드 처리를 함,
@@ -139,7 +139,7 @@ app.post('/api/signup', async (req, res) => {
   }
 })
 
-// [로그인] 처리 라우트
+// [로그인] 처리 라우트 (세션 방식)
 app.post('/api/login', (req, res) => {
   console.log('login 진입')
   const { iduser, userpw } = req.body
@@ -165,24 +165,34 @@ app.post('/api/login', (req, res) => {
       return res.status(401).json({ error: '비밀번호가 틀렸습니다.' })
     }
 
-    // JWT 토큰 발급
-    const jwt = require('jsonwebtoken')
-    const token = jwt.sign(
-      {
-        id: user.id,
-        iduser: user.iduser,
-        role: user.role, //이 필드는 DB에 있어야 함.
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    )
+    // 세션에 로그인 정보 저장
+    req.session.user = {
+      id: user.id,
+      iduser: user.iduser,
+      role: user.role,
+    }
 
-    // 응답에 토큰 포함해서 보내기
+    // 프론트엔드에 간단한 로그인 정보만 응답
     res.status(200).json({
       message: '로그인 성공',
-      token,
       iduser: user.iduser,
     })
+  })
+})
+
+// [로그아웃] 처리 라우트
+app.post('/api/logout', (req, res) => {
+  if (!req.session.user) {
+    return res.status(400).json({ error: '로그인 상태가 아닙니다.' })
+  }
+
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('세션 제거 실패:', err)
+      return res.status(500).json({ error: '로그아웃 실패' })
+    }
+    res.clearCookie('connect.sid') //클라이언트의 세션 쿠키 제거
+    res.json({ message: '로그아웃 성공' })
   })
 })
 
@@ -281,15 +291,11 @@ app.post('/api/reset-password', async (req, res) => {
 
 // 관리자 전용 로그 조회 API
 app.get('/admin/logs', isAdmin, async (req, res) => {
-  try {
-    const [rows] = await pool
-      .promise()
-      .query('SELECT * FROM logs ORDER BY timestamp DESC')
-    await logAction(req.user.id, '관리자 로그 조회', req.ip)
-    res.json(rows)
-  } catch (err) {
-    res.status(500).json({ message: '로그 조회 실패' })
-  }
+  const [rows] = await pool
+    .promise()
+    .query('SELECT * FROM logs ORDER BY timestamp DESC')
+  await logAction(req.session.user.id, '관리자 로그 조회', req.ip)
+  res.json(rows)
 })
 
 // 정적 파일 제공 (React 빌드 파일)
